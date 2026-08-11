@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rudra Arora - Computer Science student, York University</title>
+<meta name="description" content="Third-year Computer Science student at York University. Backend, full-stack and machine learning. Java, Spring Boot, Python. Looking for a software or ML co-op.">
+<meta name="color-scheme" content="dark">
+
+<style>
+ 
+
+  html {
+    font-size: 18px;
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    max-width: 50rem;
+    margin: 0 auto;
+    padding: 3.5rem 2rem 5rem;
+    background: #0b0c0e;
+    color: #ccd1d7;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 1rem;
+    line-height: 1.72;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1 {
+    font-size: 2.05rem;
+    line-height: 1.15;
+    font-weight: 700;
+    letter-spacing: -.022em;
+    color: #f4f6f8;
+    margin: 0 0 .3rem;
+  }
+
+  h2 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: #4ade80;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    margin: 3.4rem 0 1.4rem;
+    padding-top: 1.7rem;
+    border-top: 1px solid #23262b;
+    scroll-margin-top: 5.5rem;
+  }
+
+  h2::before {
+    content: "// ";
+    color: #2d7d4d;
+  }
+
+  .site-nav {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: .3rem 1.2rem;
+    margin: -3.5rem 0 2.6rem;
+    padding: 1.1rem 0;
+    background: #0b0c0e;
+    border-bottom: 1px solid #23262b;
+  }
+
+  .site-nav a {
+    color: #9aa2ab;
+    text-decoration: none;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    font-size: .8rem;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+
+  .site-nav a:hover,
+  .site-nav a:focus-visible { color: #4ade80; }
+
+  h3 {
+    font-size: 1.06rem;
+    font-weight: 600;
+    color: #e9ecef;
+    margin: 0 0 .35rem;
+  }
+
+  p { margin: 0 0 1.1rem; }
+  p:last-child { margin-bottom: 0; }
+
+  strong { color: #edf0f2; font-weight: 600; }
+
+  a {
+    color: #4ade80;
+    text-decoration: underline;
+    text-underline-offset: .18em;
+    text-decoration-thickness: 1px;
+    text-decoration-color: #2d7d4d;
+  }
+
+  a:hover { text-decoration-color: #4ade80; }
+
+  .meta {
+    font-size: .84rem;
+    line-height: 1.55;
+    color: #838b95;
+    font-weight: 400;
+  }
+
+  .lede {
+    font-size: 1.06rem;
+    color: #8d959e;
+    margin: 0 0 2rem;
+    font-weight: 400;
+  }
+
+  .proj {
+    border-bottom: 1px solid #1c1f24;
+  }
+
+  .proj:first-of-type { border-top: 1px solid #1c1f24; }
+
+  .proj > summary {
+    display: block;
+    position: relative;
+    cursor: pointer;
+    padding: 1.15rem 2.2rem 1.15rem 0;
+    list-style: none;
+  }
+
+  .proj > summary::-webkit-details-marker { display: none; }
+  .proj > summary::marker { content: ""; }
+
+  .proj > summary:hover .p-name { color: #4ade80; }
+
+  .proj > summary:focus-visible {
+    outline: 2px solid #4ade80;
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  .p-name {
+    display: block;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #f4f6f8;
+    line-height: 1.35;
+    margin-bottom: .3rem;
+    padding-left: .7rem;
+    border-left: 2px solid #2d7d4d;
+  }
+
+  .proj > summary:hover .p-name { border-left-color: #4ade80; }
+
+  .p-one {
+    display: block;
+    font-size: .97rem;
+    color: #aeb5bd;
+    margin-bottom: .65rem;
+    padding-left: .7rem;
+  }
+
+  .p-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .4rem;
+    padding-left: .7rem;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    padding: .2rem .6rem;
+    border: 1px solid #23262b;
+    border-radius: 999px;
+    background: #101216;
+    color: #9aa2ab;
+    font-size: .76rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    line-height: 1.5;
+    white-space: nowrap;
+  }
+
+  .p-key {
+    border-color: #2d7d4d;
+    background: rgba(74, 222, 128, .08);
+    color: #4ade80;
+    font-weight: 600;
+    white-space: normal;
+  }
+
+  .proj > summary::after {
+    content: "+";
+    position: absolute;
+    right: .1rem;
+    top: 1.15rem;
+    width: 1.3rem;
+    height: 1.3rem;
+    line-height: 1.2rem;
+    text-align: center;
+    font-size: 1.05rem;
+    color: #838b95;
+    border: 1px solid #2b2f36;
+    border-radius: 3px;
+  }
+
+  .proj[open] > summary::after {
+    content: "\2212";
+    color: #4ade80;
+    border-color: #2d7d4d;
+  }
+
+  .p-body {
+    padding: .25rem 0 1.6rem;
+  }
+
+  .p-body p { margin-bottom: .95rem; }
+
+  .p-body img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 6px;
+    border: 1px solid #23262b;
+    margin: 1rem 0 1.2rem;
+  }
+
+  .p-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .4rem;
+    margin: 0 0 1.2rem;
+  }
+
+    figure { margin: 1.4rem 0 1.2rem; }
+  figure svg { width: 100%; height: auto; display: block; }
+
+  figcaption {
+    font-size: .84rem;
+    line-height: 1.55;
+    color: #838b95;
+    margin-top: .6rem;
+  }
+
+  .run-log {
+    margin: 0 0 1.3rem;
+    border: 1px solid #23262b;
+    border-radius: 4px;
+    background: #101216;
+  }
+
+  .run-log > summary {
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: .75rem .9rem;
+    font-size: .84rem;
+    color: #9aa2ab;
+  }
+
+  .run-log > summary::-webkit-details-marker { display: none; }
+  .run-log > summary::marker { content: ""; }
+  .run-log > summary:hover { color: #4ade80; }
+
+  .run-log > summary::after {
+    content: "Show";
+    flex: none;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    font-size: .7rem;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: #6f7781;
+  }
+
+  .run-log[open] > summary::after { content: "Hide"; }
+
+  .run-log-body {
+    padding: .2rem .9rem 1rem;
+    border-top: 1px solid #23262b;
+  }
+
+  .rt-label {
+    font-size: .74rem;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: #7b838d;
+    margin: 1.1rem 0 .5rem;
+  }
+
+  .rt-label:first-child { margin-top: .9rem; }
+
+  .run-table-wrap { overflow-x: auto; }
+
+  .run-table {
+    width: 100%;
+    min-width: 26rem;
+    border-collapse: collapse;
+    font-size: .84rem;
+  }
+
+  .run-table th {
+    text-align: left;
+    font-size: .7rem;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: #7b838d;
+    padding: 0 .5rem .4rem 0;
+    border-bottom: 1px solid #23262b;
+  }
+
+  .run-table th:last-child,
+  .run-table td.acc { text-align: right; padding-right: 0; }
+
+  .run-table td {
+    padding: .5rem .5rem .5rem 0;
+    border-bottom: 1px solid #1c1f24;
+    color: #ccd1d7;
+    vertical-align: top;
+  }
+
+  .run-table tr:last-child td { border-bottom: none; }
+
+  .run-table td.acc {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    font-size: .8rem;
+    color: #e2e6ea;
+    white-space: nowrap;
+  }
+
+  .run-table tr.flag td { color: #cbb676; }
+  .run-table tr.flag td.acc { color: #f59e0b; }
+
+  .run-table tr.final td { color: #f4f6f8; font-weight: 600; }
+  .run-table tr.final td.acc { color: #4ade80; }
+
+  .c-grid { stroke: #23262b; stroke-width: 1; }
+  .c-lbl  { fill: #ccd1d7; font-size: 12.5px; }
+  .c-lbl-leak { fill: #f59e0b; font-size: 10.5px; }
+  .c-ax   { fill: #6f7781; font-size: 11px; }
+  .c-val  { fill: #f4f6f8; font-size: 12.5px; font-weight: 600; }
+  .c-val-leak { fill: #f59e0b; font-size: 12.5px; font-weight: 600; }
+
+  .trend-line { fill: none; stroke: #4ade80; stroke-width: 2; stroke-linejoin: round; }
+  .stem-leak { stroke: #f59e0b; stroke-width: 2; stroke-dasharray: 4 3; }
+
+  .dot-ref { fill: #34383e; }
+  .dot-v1  { fill: #2f6b45; }
+  .dot-v2  { fill: #4ade80; }
+  .dot-v3  { fill: #4ade80; }
+  .dot-leak { fill: #0b0c0e; stroke: #f59e0b; stroke-width: 2; }
+
+    .sk-group { margin-bottom: 1.9rem; }
+
+  .sk-group h3 {
+    font-size: .88rem;
+    font-weight: 600;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: #8d959e;
+    margin: 0 0 .7rem;
+    padding-bottom: .5rem;
+    border-bottom: 1px solid #1c1f24;
+  }
+
+  .sk-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem;
+    padding: .16rem 0;
+  }
+
+  .sk-name { font-size: .95rem; color: #ccd1d7; }
+
+  .meter {
+    position: relative;
+    flex: none;
+    width: 72px;
+    height: 13px;
+    background-image: repeating-linear-gradient(90deg, #23262b 0 9px, transparent 9px 12px);
+  }
+
+  .meter i {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background-image: repeating-linear-gradient(90deg, #4ade80 0 9px, transparent 9px 12px);
+  }
+
+  .l3 { width: 72px; }
+  .l2 { width: 48px; }
+  .l1 { width: 24px; }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.3rem;
+    font-size: .82rem;
+    color: #838b95;
+    margin-top: 1.3rem;
+  }
+
+  .legend span { display: flex; align-items: center; gap: .45rem; }
+
+  .key {
+    flex: none;
+    width: 33px;
+    height: 11px;
+    background-image: repeating-linear-gradient(90deg, #4ade80 0 9px, transparent 9px 12px);
+  }
+
+  .key.k2 { width: 21px; }
+  .key.k1 { width: 9px; }
+
+    .timeline {
+    position: relative;
+    padding-left: 28px;
+  }
+
+  .timeline::before {
+    content: "";
+    position: absolute;
+    left: 5px;
+    top: 9px;
+    bottom: 10px;
+    width: 2px;
+    background: #23262b;
+  }
+
+  .tl-item { position: relative; margin-bottom: 2.3rem; }
+  .tl-item:last-child { margin-bottom: 0; }
+
+  .tl-item::before {
+    content: "";
+    position: absolute;
+    left: -28px;
+    top: 9px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #0b0c0e;
+    border: 2px solid #4ade80;
+  }
+
+  .tl-org {
+    font-size: .95rem;
+    color: #aeb5bd;
+    margin: 0;
+  }
+
+  .tl-when {
+    font-size: .84rem;
+    color: #7b838d;
+    margin: 0 0 .7rem;
+  }
+
+  ul { margin: 0; padding-left: 1.15rem; }
+  li { margin-bottom: .45rem; }
+  li:last-child { margin-bottom: 0; }
+
+    .contact {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: .5rem 1.5rem;
+    margin: 0;
+  }
+
+  .contact dt {
+    font-size: .8rem;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: #7b838d;
+    line-height: 1.85;
+  }
+
+  .contact dd {
+    margin: 0;
+    font-size: .97rem;
+    line-height: 1.85;
+    color: #e2e6ea;
+  }
+
+  footer {
+    margin-top: 3.4rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #23262b;
+    font-size: .84rem;
+    color: #6f7781;
+  }
+
+    @media (max-width: 34rem) {
+    html { font-size: 17px; }
+    body { padding: 2.5rem 1.15rem 4rem; }
+    h1 { font-size: 1.8rem; }
+    .site-nav { justify-content: center; margin: -2.5rem -1.15rem 2.2rem; padding: .9rem 1.15rem; gap: .3rem .9rem; }
+    .contact { grid-template-columns: 1fr; gap: 0 0; }
+    .contact dt { line-height: 1.6; margin-top: .55rem; }
+    .contact dd { line-height: 1.6; }
+    .contact dt:first-child { margin-top: 0; }
+  }
+
+    @media print {
+    body { background: #fff; color: #111; max-width: none; padding: 0; }
+    h1, h2, h3, .p-name, .c-lbl, .c-val, strong { color: #000; }
+    h2::before { color: #000; }
+    a { color: #000; text-decoration: underline; }
+    .p-name { border-left-color: #000; }
+    .chip { background: none; border-color: #999; color: #111; }
+    .chip.p-key { border-color: #000; color: #000; background: none; }
+    .p-body { display: block !important; }
+    .proj > summary::after { display: none; }
+    .site-nav { display: none; }
+    .dot-v2, .dot-v3 { fill: #444; } .dot-v1 { fill: #999; } .dot-ref { fill: #ccc; }
+    .trend-line { stroke: #444; }
+    .c-val-leak, .c-lbl-leak { fill: #b45309; }
+    .dot-leak { fill: #fff; stroke: #b45309; }
+    .stem-leak { stroke: #b45309; }
+    .meter i { background-image: repeating-linear-gradient(90deg, #000 0 9px, transparent 9px 12px); }
+    .run-log { background: none; border-color: #999; }
+    .run-log-body { display: block !important; border-top-color: #999; }
+    .run-log > summary::after { display: none; }
+    .run-table th, .run-table td { color: #111; border-bottom-color: #ccc; }
+    .run-table tr.flag td, .run-table tr.flag td.acc { color: #b45309; }
+    .run-table tr.final td, .run-table tr.final td.acc { color: #000; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="site-nav" aria-label="Section navigation">
+  <a href="#about">About</a>
+  <a href="#projects">Projects</a>
+  <a href="#skills">Skills</a>
+  <a href="#experience">Experience</a>
+  <a href="#contact">Contact</a>
+</nav>
+
+<h1>Rudra Arora</h1>
+<p class="lede">Computer Science student at York University, building backend, full-stack and machine learning projects.</p>
+
+<h2 id="about">About</h2>
+
+<p>
+  I'm in my third year of Computer Science at York University. I build things end to
+  end: backend services and APIs, full-stack web apps, and machine learning pipelines.
+  <strong>Java and Spring Boot are what I'm strongest in.</strong> Most of my ML work
+  is in Python, with pandas, scikit-learn and PyTorch.
+</p>
+
+<p>
+  The parts I tend to focus on are the ones that decide whether something actually
+  works. Checking the data is right before trusting a model trained on it. Making sure
+  invalid states can't happen in the first place. Covering the edge cases that break
+  quietly rather than loudly.
+</p>
+
+<p>
+  I'm looking for a co-op or internship where I can work on something that gets used.
+</p>
+
+<h2 id="projects">Projects</h2>
+
+<details class="proj">
+  <summary>
+    <span class="p-name">Job Market Salary Predictor</span>
+    <span class="p-one">Salary prediction from job postings, built end to end</span>
+    <span class="p-meta">
+      <span class="chip">Python</span>
+      <span class="chip">PyTorch</span>
+      <span class="chip">scikit-learn</span>
+      <span class="chip">FastAPI</span>
+      <span class="chip">PostgreSQL</span>
+      <span class="chip p-key">79.8% accuracy vs a 47.8% baseline</span>
+    </span>
+  </summary>
+
+  <div class="p-body">
+    <p>
+      Predicts salaries from job postings. I built the whole thing: a FastAPI backend,
+      PostgreSQL for storage, and a Streamlit interface so people who don't write code
+      could query it without going through me.
+    </p>
+    <p>
+      The part I'd point to is the rebuild. My first model got <strong>54.6%</strong>,
+      which sounds fine until you check it against a <strong>47.8% baseline</strong>. I
+      reworked it into a two-stage model, TF-IDF feeding into gradient boosting, and got
+      it to <strong>79.8%</strong>.
+    </p>
+    <p>
+      Along the way I caught an easy <strong>85%</strong> that turned out to be the model
+      reading salaries straight out of the posting text, a leak, not a real signal, so I
+      identified it and rejected it. To make sure the real number held up, I validated on
+      employers the model had never seen, which came in at <strong>71.4%</strong>. I
+      documented the whole process for both technical and non-technical readers.
+    </p>
+
+    <figure>
+      <svg viewBox="0 0 660 270" role="img"
+           aria-label="Accuracy by model version on a 3-class task, plotted as connected points: baseline 47.8 percent, first version 54.6 percent, two-stage model 79.8 percent, validated on unseen employers 71.4 percent. A side branch shows an 85 percent result that was identified and rejected as a data leak, the model reading salaries out of the posting text.">
+        <line class="c-grid" x1="55" y1="210" x2="635" y2="210"/>
+        <line class="c-grid" x1="55" y1="165" x2="635" y2="165"/>
+        <line class="c-grid" x1="55" y1="120" x2="635" y2="120"/>
+        <line class="c-grid" x1="55" y1="75" x2="635" y2="75"/>
+        <line class="c-grid" x1="55" y1="30" x2="635" y2="30"/>
+
+        <text class="c-ax" x="55" y="18">All runs: 3-class task</text>
+
+        <text class="c-ax" x="45" y="214" text-anchor="end">0</text>
+        <text class="c-ax" x="45" y="169" text-anchor="end">25</text>
+        <text class="c-ax" x="45" y="124" text-anchor="end">50</text>
+        <text class="c-ax" x="45" y="79" text-anchor="end">75</text>
+        <text class="c-ax" x="45" y="34" text-anchor="end">100%</text>
+
+        <polyline class="trend-line"
+          points="113,124 229,112 461,66 577,81"/>
+
+        <line class="stem-leak" x1="229" y1="112" x2="345" y2="57"/>
+
+        <circle class="dot-ref" cx="113" cy="124" r="6"/>
+        <text class="c-val" x="113" y="106" text-anchor="middle">47.8%</text>
+        <text class="c-lbl" x="113" y="232" text-anchor="middle">Baseline</text>
+
+        <circle class="dot-v1" cx="229" cy="112" r="6"/>
+        <text class="c-val" x="229" y="94" text-anchor="middle">54.6%</text>
+        <text class="c-lbl" x="229" y="232" text-anchor="middle">First version</text>
+
+        <circle class="dot-leak" cx="345" cy="57" r="6"/>
+        <text class="c-val-leak" x="345" y="39" text-anchor="middle">~85%</text>
+        <text class="c-lbl" x="345" y="232" text-anchor="middle">Leak, rejected</text>
+        <text class="c-lbl-leak" x="345" y="246" text-anchor="middle">(read salary from text)</text>
+
+        <circle class="dot-v2" cx="461" cy="66" r="6"/>
+        <text class="c-val" x="461" y="48" text-anchor="middle">79.8%</text>
+        <text class="c-lbl" x="461" y="232" text-anchor="middle">Two-stage model</text>
+
+        <circle class="dot-v3" cx="577" cy="81" r="6"/>
+        <text class="c-val" x="577" y="63" text-anchor="middle">71.4%</text>
+        <text class="c-lbl" x="577" y="232" text-anchor="middle">Unseen employers</text>
+      </svg>
+      <figcaption>
+        Accuracy on held-out data, one point per model version, connected in the order I
+        reached them. Two-stage model, at 79.8%, is the number I report. Off to the side is
+        an ~85% run I identified and rejected: it came from the model reading salaries
+        directly out of the posting text rather than learning from real signal. Validating
+        the reported model on employers it hadn't seen during training brought accuracy to
+        71.4%, still well above baseline.
+      </figcaption>
+    </figure>
+
+    <details class="run-log">
+      <summary>Full run log</summary>
+      <div class="run-log-body">
+        <p class="rt-label">Earlier iteration (4-class)</p>
+        <div class="run-table-wrap"><table class="run-table">
+          <thead>
+            <tr><th>Run</th><th>Accuracy</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Initial, job_category built but never passed to the model</td>
+              <td class="acc">46%</td>
+            </tr>
+            <tr>
+              <td>Bug fixed + model comparison + tuning</td>
+              <td class="acc">49.6%</td>
+            </tr>
+            <tr>
+              <td>Target encoding replacing label encoding, + company_name</td>
+              <td class="acc">51.8%</td>
+            </tr>
+            <tr>
+              <td>Merged "Low (&lt;$50K)" into Mid, 4 classes to 3</td>
+              <td class="acc">54.6% test / 53.9% CV</td>
+            </tr>
+          </tbody>
+        </table></div>
+
+        <p class="rt-label">3-class, 35,578 rows unless noted</p>
+        <div class="run-table-wrap"><table class="run-table">
+          <thead>
+            <tr><th>Run</th><th>Accuracy</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Majority-class baseline</td>
+              <td class="acc">47.81%</td>
+            </tr>
+            <tr>
+              <td>Full pipeline, 2,500-row smoke test</td>
+              <td class="acc">70.20%</td>
+            </tr>
+            <tr>
+              <td>Text-only, 8K subsample, first signal</td>
+              <td class="acc">72.00%</td>
+            </tr>
+            <tr class="flag">
+              <td>Text-only, 14K sample, raw postings with the salary string left in &mdash; leak, rejected</td>
+              <td class="acc">~85%</td>
+            </tr>
+            <tr>
+              <td>Text-only, 14K sample, stripped</td>
+              <td class="acc">74.79%</td>
+            </tr>
+            <tr class="flag">
+              <td>Text-only, 14K sample, raw/leaky</td>
+              <td class="acc">75.54%</td>
+            </tr>
+            <tr>
+              <td>Full stack without text features</td>
+              <td class="acc">75.17%</td>
+            </tr>
+            <tr>
+              <td>Text-only, OOF folds</td>
+              <td class="acc">76.1 / 76.7 / 77.1 / 77.0 / 77.7%</td>
+            </tr>
+            <tr>
+              <td>Text-only, held-out test</td>
+              <td class="acc">77.77%</td>
+            </tr>
+            <tr class="final">
+              <td>Full stack, final</td>
+              <td class="acc">79.75%</td>
+            </tr>
+            <tr>
+              <td>5-fold CV, 3 folds run</td>
+              <td class="acc">80.34 / 79.40 / 78.61 &rarr; 79.45% &plusmn; 0.71%</td>
+            </tr>
+            <tr>
+              <td>Final model, validated on employers unseen during training</td>
+              <td class="acc">71.4%</td>
+            </tr>
+          </tbody>
+        </table></div>
+      </div>
+    </details>
+
+    <p>
+      There are 57 tests, and most of them check the data rather than the code.
+    </p>
+    <p class="p-stack">
+      <span class="chip">Python</span>
+      <span class="chip">PyTorch</span>
+      <span class="chip">scikit-learn</span>
+      <span class="chip">TF-IDF</span>
+      <span class="chip">gradient boosting</span>
+      <span class="chip">FastAPI</span>
+      <span class="chip">PostgreSQL</span>
+      <span class="chip">Streamlit</span>
+      <span class="chip">pytest</span>
+    </p>
+    <p>
+      <a href="https://github.com/RD-1205">Code on GitHub</a>
+    </p>
+  </div>
+</details>
+
+<details class="proj">
+  <summary>
+    <span class="p-name">Consultation Booking Platform</span>
+    <span class="p-one">Appointment booking with an enforced state machine and an LLM inside the flow</span>
+    <span class="p-meta">
+      <span class="chip">React</span>
+      <span class="chip">Spring Boot</span>
+      <span class="chip">PostgreSQL</span>
+      <span class="chip">Docker</span>
+      <span class="chip">Gemini API</span>
+      <span class="chip p-key">4-state lifecycle, invalid transitions rejected</span>
+    </span>
+  </summary>
+
+  <div class="p-body">
+    <p>
+      A booking platform for consultations. The appointment lifecycle is modelled as real
+      states, requested to confirmed to completed to cancelled, with validation that
+      rejects transitions that shouldn't be possible rather than trusting whatever the
+      client sends.
+    </p>
+    <p>
+      It has a Gemini chatbot built into the booking flow itself, not sitting off to the
+      side as a separate assistant. I wanted the AI to work inside a process that already
+      had defined rules.
+    </p>
+    <p class="p-stack">
+      <span class="chip">React</span>
+      <span class="chip">Spring Boot</span>
+      <span class="chip">PostgreSQL</span>
+      <span class="chip">Docker</span>
+      <span class="chip">Gemini API</span>
+      <span class="chip">REST</span>
+    </p>
+    <p><a href="https://github.com/RD-1205">Code on GitHub</a></p>
+  </div>
+</details>
+
+<details class="proj">
+  <summary>
+    <span class="p-name">Full-Stack Chess Engine</span>
+    <span class="p-one">Server-side chess AI with complete rule validation</span>
+    <span class="p-meta">
+      <span class="chip">Java</span>
+      <span class="chip">Spring Boot</span>
+      <span class="chip">REST</span>
+      <span class="chip">JavaScript</span>
+      <span class="chip p-key">minimax with alpha-beta pruning</span>
+    </span>
+  </summary>
+
+  <div class="p-body">
+    <p>
+      A chess engine with the AI and all the rule checking on the server. It searches with
+      minimax and alpha-beta pruning.
+    </p>
+    <p>
+      Rule validation covers castling, en passant, promotion, and check, checkmate and
+      stalemate detection. Those are the cases where a lot of hobby engines quietly break,
+      so getting them right was most of the work.
+    </p>
+    <p class="p-stack">
+      <span class="chip">Java</span>
+      <span class="chip">Spring Boot</span>
+      <span class="chip">REST</span>
+      <span class="chip">JavaScript</span>
+    </p>
+    <p><a href="https://github.com/RD-1205">Code on GitHub</a></p>
+  </div>
+</details>
+
+<h2 id="skills">Skills</h2>
+
+<p class="meta" style="margin-bottom:1.6rem">
+  Ordered roughly by how much I've actually built with each, strongest first.
+</p>
+
+<div class="sk-group">
+  <h3>Languages</h3>
+  <div class="sk-row"><span class="sk-name">Java</span><span class="meter"><i class="l3"></i></span></div>
+  <div class="sk-row"><span class="sk-name">Python</span><span class="meter"><i class="l3"></i></span></div>
+  <div class="sk-row"><span class="sk-name">SQL</span><span class="meter"><i class="l3"></i></span></div>
+  <div class="sk-row"><span class="sk-name">JavaScript</span><span class="meter"><i class="l2"></i></span></div>
+</div>
+
+<div class="sk-group">
+  <h3>Backend, APIs and infrastructure</h3>
+  <div class="sk-row"><span class="sk-name">Spring Boot</span><span class="meter"><i class="l3"></i></span></div>
+  <div class="sk-row"><span class="sk-name">REST API design</span><span class="meter"><i class="l3"></i></span></div>
+  <div class="sk-row"><span class="sk-name">PostgreSQL</span><span class="meter"><i class="l3"></i></span></div>
+  <div class="sk-row"><span class="sk-name">FastAPI</span><span class="meter"><i class="l3"></i></span></div>
+  <div class="sk-row"><span class="sk-name">Git</span><span class="meter"><i class="l3"></i></span></div>
+  <div class="sk-row"><span class="sk-name">Docker</span><span class="meter"><i class="l2"></i></span></div>
+  <div class="sk-row"><span class="sk-name">GitHub Actions</span><span class="meter"><i class="l2"></i></span></div>
+  <div class="sk-row"><span class="sk-name">React</span><span class="meter"><i class="l2"></i></span></div>
+  <div class="sk-row"><span class="sk-name">GCP, AWS</span><span class="meter"><i class="l1"></i></span></div>
+</div>
+
+<div class="sk-group">
+  <h3>Testing and data quality</h3>
+  <div class="sk-row"><span class="sk-name">pytest</span><span class="meter"><i class="l3"></i></span></div>
+  <div class="sk-row"><span class="sk-name">Dataset validation</span><span class="meter"><i class="l3"></i></span></div>
+  <div class="sk-row"><span class="sk-name">Data leakage detection</span><span class="meter"><i class="l3"></i></span></div>
+  <div class="sk-row"><span class="sk-name">Train/validation design</span><span class="meter"><i class="l3"></i></span></div>
+</div>
+
+<div class="sk-group">
+  <h3>ML and data</h3>
+  <div class="sk-row"><span class="sk-name">pandas, NumPy</span><span class="meter"><i class="l3"></i></span></div>
+  <div class="sk-row"><span class="sk-name">scikit-learn</span><span class="meter"><i class="l3"></i></span></div>
+  <div class="sk-row"><span class="sk-name">Feature engineering</span><span class="meter"><i class="l3"></i></span></div>
+  <div class="sk-row"><span class="sk-name">LightGBM, gradient boosting</span><span class="meter"><i class="l3"></i></span></div>
+  <div class="sk-row"><span class="sk-name">Model evaluation</span><span class="meter"><i class="l3"></i></span></div>
+  <div class="sk-row"><span class="sk-name">PyTorch</span><span class="meter"><i class="l2"></i></span></div>
+  <div class="sk-row"><span class="sk-name">TF-IDF, regression</span><span class="meter"><i class="l2"></i></span></div>
+  <div class="sk-row"><span class="sk-name">ETL and data pipelines</span><span class="meter"><i class="l2"></i></span></div>
+  <div class="sk-row"><span class="sk-name">Plotly, Streamlit</span><span class="meter"><i class="l2"></i></span></div>
+</div>
+
+<div class="legend">
+  <span><i class="key"></i>Built and shipped with it</span>
+  <span><i class="key k2"></i>Working knowledge</span>
+  <span><i class="key k1"></i>Some exposure</span>
+</div>
+
+<h2 id="experience">Experience</h2>
+
+<div class="timeline">
+
+  <div class="tl-item">
+    <h3>Study Space Assistant</h3>
+    <p class="tl-org">York University Libraries</p>
+    <p class="tl-when">May 2026 – present</p>
+    <ul>
+      <li>
+        Support day-to-day operations across 5 campus locations, including shipping
+        logistics and moving resources between facilities.
+      </li>
+      <li>
+        Coordinate between staff and building users. Where an issue keeps coming back,
+        I escalate it instead of handling the same thing repeatedly.
+      </li>
+    </ul>
+  </div>
+
+  <div class="tl-item">
+    <h3>Student Success Mentor Lead</h3>
+    <p class="tl-org">York University Libraries</p>
+    <p class="tl-when">Fall 2024 – present</p>
+    <ul>
+      <li>Lead a team of 5 mentors across 3 campuses and standardised how scheduling works between them.</li>
+      <li>Standardised cross-platform content scheduling, which contributed to a 30% increase in audience growth.</li>
+      <li>Plan and run 2 multi-campus events a month. Event sign-ups went up 40% after we changed how we promoted them.</li>
+      <li>Handle WordPress updates and posting across Instagram, Twitter and YouTube, and track engagement to decide what to do differently.</li>
+    </ul>
+  </div>
+
+  <div class="tl-item">
+    <h3>BSc Computer Science</h3>
+    <p class="tl-org">York University, Toronto</p>
+    <p class="tl-when">Winter 2024 – present</p>
+    <p>
+      Currently in third year.
+          </p>
+  </div>
+
+</div>
+
+<h2 id="contact">Contact</h2>
+
+<dl class="contact">
+  <dt>Email</dt>
+  <dd><a href="mailto:rudraarora0905@gmail.com">rudraarora0905@gmail.com</a></dd>
+
+  <dt>GitHub</dt>
+  <dd><a href="https://github.com/RD-1205">github.com/RD-1205</a></dd>
+
+  <dt>LinkedIn</dt>
+  <dd><a href="https://www.linkedin.com/in/rudra-arora-689143316/">linkedin.com/in/rudra-arora</a></dd>
+
+  <dt>RESUME</dt>
+  <dd><a href="resume.pdf">RESUME (PDF)</a></dd>
+
+  <dt>Location</dt>
+  <dd>Toronto, ON, Canada</dd>
+</dl>
+
+<footer>
+  Last updated August 2026.
+</footer>
+
+</body>
+</html>
