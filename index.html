@@ -349,6 +349,16 @@
   .c-val-leak { fill: #f59e0b; font-size: 12.5px; font-weight: 600; }
 
   .trend-line { fill: none; stroke: #4ade80; stroke-width: 2; stroke-linejoin: round; }
+
+  .mono-inline { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+                 font-size: .92em; color: #f4f6f8; }
+  .bar-ok   { fill: #4ade80; }
+  .bar-bad  { fill: #f59e0b; }
+  .bar-gap  { fill: #2a2d33; }
+  .bar-lbl  { fill: #ccd1d7; font-size: 12.5px; }
+  .bar-note { fill: #6f7781; font-size: 11px; }
+  .q-real   { fill: #4ade80; }
+  .q-missing{ fill: none; stroke: #f59e0b; stroke-width: 1.5; stroke-dasharray: 4 3; }
   .stem-leak { stroke: #f59e0b; stroke-width: 2; stroke-dasharray: 4 3; }
 
   .dot-ref { fill: #34383e; }
@@ -568,6 +578,207 @@
 </p>
 
 <h2 id="projects">Projects</h2>
+
+<details class="proj">
+  <summary>
+    <span class="p-name">Financial Filings Data Platform</span>
+    <span class="p-one">Ingests public company filings, normalises them, and lets you query the result as of any past date</span>
+    <span class="p-meta">
+      <span class="chip">Python</span>
+      <span class="chip">FastAPI</span>
+      <span class="chip">SQLite</span>
+      <span class="chip">HTMX</span>
+      <span class="chip">pytest</span>
+      <span class="chip p-key">285k filings parsed &middot; two wrong numbers found</span>
+    </span>
+  </summary>
+
+  <div class="p-body">
+    <p>
+      A stock screener built on public regulatory filings. It pulls raw filing data,
+      normalises it into something queryable, computes the usual financial ratios, and
+      serves it as a website. Ingestion, schema, query engine and interface are all mine.
+    </p>
+
+    <p>
+      The idea it's built around is small but it changes the architecture. Every free
+      screener I looked at rebuilds history from <em>today's</em> data. So when you ask one
+      "what would this filter have returned in 2019", it answers using figures that were
+      revised years later, and companies that hadn't listed yet. The results look better
+      than reality and you can't patch it afterwards, because the information needed is
+      already gone. I keep the filing date on every single datapoint, which means a
+      historical query returns only what was genuinely on file that day.
+    </p>
+
+    <p>
+      The part I'd point to is a bug I nearly shipped. Trailing-twelve-month revenue is
+      supposed to be the last four quarters added together, so that's what I did, and the
+      numbers looked completely reasonable. They were about <strong>7% too low</strong>.
+      US companies file three quarterly reports and one annual report, which means the
+      fourth quarter is never published on its own &mdash; summing "the last four rows"
+      silently picks up a quarter from the previous year instead. Nothing crashes. Every
+      margin and valuation ratio on the site is just quietly wrong.
+    </p>
+
+    <figure>
+      <svg viewBox="0 0 660 250" role="img"
+           aria-label="Diagram showing that summing the last four quarterly rows produces a trailing-twelve-month figure about seven percent short, because no fourth-quarter report is ever filed. The correct approach derives the fourth quarter by subtracting the nine-month figure from the annual report.">
+        <text class="c-ax" x="0" y="16">What gets filed</text>
+
+        <rect class="q-real" x="0"   y="30" width="120" height="26" rx="3"/>
+        <rect class="q-real" x="128" y="30" width="120" height="26" rx="3"/>
+        <rect class="q-real" x="256" y="30" width="120" height="26" rx="3"/>
+        <rect class="q-missing" x="384" y="30" width="120" height="26" rx="3"/>
+
+        <text class="bar-lbl" x="60"  y="48" text-anchor="middle">Q1</text>
+        <text class="bar-lbl" x="188" y="48" text-anchor="middle">Q2</text>
+        <text class="bar-lbl" x="316" y="48" text-anchor="middle">Q3</text>
+        <text class="c-val-leak" x="444" y="48" text-anchor="middle">Q4 &mdash; never filed</text>
+
+        <rect class="bar-gap" x="0" y="66" width="504" height="22" rx="3"/>
+        <text class="bar-note" x="252" y="81" text-anchor="middle">annual report covers the whole year</text>
+
+        <text class="c-ax" x="0" y="124">Trailing twelve months</text>
+
+        <rect class="bar-bad" x="0" y="138" width="469" height="24" rx="3"/>
+        <text class="bar-lbl" x="8" y="155">Sum the last four rows</text>
+        <text class="c-val-leak" x="640" y="155" text-anchor="end">~7% short</text>
+
+        <rect class="bar-ok" x="0" y="172" width="504" height="24" rx="3"/>
+        <text class="bar-lbl" x="8" y="189">Annual minus the nine-month figure</text>
+        <text class="c-val" x="640" y="189" text-anchor="end">correct</text>
+
+        <text class="bar-note" x="0" y="222">Reaching back four rows crosses into the prior year and double-counts a quarter.</text>
+        <text class="bar-note" x="0" y="238">Nothing throws. The output is plausible, which is why it survived review.</text>
+      </svg>
+      <figcaption>
+        The fourth quarter has to be derived, not read. Adding up the last four available
+        rows reaches back into the previous fiscal year, which is small enough to look
+        right and large enough to make every downstream ratio wrong.
+      </figcaption>
+    </figure>
+
+    <p>
+      The fix took a few lines. What took longer was deciding what to test. Asserting the
+      code doesn't raise an exception would have caught nothing here, so the tests assert
+      that the numbers <em>reconcile</em> &mdash; that four quarters add up to the year they
+      belong to. Several other tests are the same shape: a company with negative equity
+      must not be able to appear in a "highest return on equity" ranking, because dividing
+      by a negative number produces a spectacular result for a company that is technically
+      insolvent.
+    </p>
+
+    <p>
+      The other genuinely hard part is that the source data has no consistent vocabulary.
+      Filers pick from roughly <strong>14,000</strong> possible field names, and two
+      companies in the same industry routinely pick different ones for the same concept.
+      Extracting a single field name silently returns nothing for a large share of the
+      market, so there's a resolution layer that maps candidate names onto one schema and
+      records which one it used, so any figure can be traced back to the filing it came
+      from.
+    </p>
+
+    <details class="run-log">
+      <summary>What went wrong, and what the real data resolved</summary>
+      <div class="run-log-body">
+        <div class="run-table-wrap"><table class="run-table">
+          <thead>
+            <tr><th>Problem</th><th>What it does if you miss it</th></tr>
+          </thead>
+          <tbody>
+            <tr class="flag">
+              <td>No fourth quarter is ever filed</td>
+              <td class="acc">Every TTM figure ~7% low</td>
+            </tr>
+            <tr>
+              <td>~14,000 possible field names, chosen freely</td>
+              <td class="acc">Blank data for much of the market</td>
+            </tr>
+            <tr>
+              <td>Quarterly cash flow is reported year-to-date, not per quarter</td>
+              <td class="acc">Quarterly cash flow triple-counts</td>
+            </tr>
+            <tr>
+              <td>Figures get revised months or years after publication</td>
+              <td class="acc">History rewrites itself</td>
+            </tr>
+            <tr>
+              <td>Filing date is weeks after the period it covers</td>
+              <td class="acc">Historical queries see the future</td>
+            </tr>
+            <tr>
+              <td>Balance sheet and income statement use different period types</td>
+              <td class="acc">Ratios silently drop to null</td>
+            </tr>
+            <tr class="flag">
+              <td>Per-share figures restate retroactively on a stock split</td>
+              <td class="acc">Series splices two bases</td>
+            </tr>
+            <tr class="final">
+              <td>First six handled and covered by tests</td>
+              <td class="acc">85 passing</td>
+            </tr>
+          </tbody>
+        </table></div>
+
+        <p class="rt-label">Field resolution on real filings, 65 companies</p>
+        <div class="run-table-wrap"><table class="run-table">
+          <thead><tr><th>Field</th><th>Resolved</th></tr></thead>
+          <tbody>
+            <tr class="final"><td>Revenue, net income, total assets, equity</td><td class="acc">98%</td></tr>
+            <tr><td>Earnings per share, share count</td><td class="acc">97%</td></tr>
+            <tr><td>Operating cash flow</td><td class="acc">94%</td></tr>
+            <tr><td>Operating income, capital expenditure</td><td class="acc">85%</td></tr>
+            <tr><td>Cost of revenue, total liabilities</td><td class="acc">77%</td></tr>
+            <tr><td>Inventory &mdash; service companies hold none</td><td class="acc">68%</td></tr>
+            <tr><td>Gross profit &mdash; back-computed where absent</td><td class="acc">58%</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </details>
+
+    <p>
+      I built it first against a synthetic corpus &mdash; six fake companies, each designed
+      to break one specific thing &mdash; then ran it on real filings.
+      <strong>285,000 facts across 65 companies.</strong> The field-name mapping resolved
+      revenue, net income, total assets and equity for <strong>98%</strong> of them.
+      Apple's 2021 revenue came out at $365.82B against $365.82B in the actual filing.
+    </p>
+
+    <p>
+      Real data also surfaced a second wrong number, and this one I would not have found
+      any other way. Apple's earnings-per-share history read
+      <span class="mono-inline">8.31, 9.21, 2.98, 2.97</span> &mdash; a fourfold drop
+      between two years where nothing happened. The cause is a stock split. When a company
+      splits its stock it retroactively restates its historical per-share figures, but only
+      for the years still shown as comparatives in its next report. Older years keep the
+      original numbers. My "use the most recently published value" rule &mdash; correct for
+      revenue &mdash; was silently stitching two different bases into one series.
+    </p>
+
+    <p>
+      The fix fell out of a decision I'd made much earlier for a different reason. Because
+      I keep <em>every</em> published version of every figure rather than overwriting, the
+      same year restated across two reports differs by exactly the split ratio. That let me
+      recover <strong>27 split events across 11 companies</strong> &mdash; Apple 7:1 and
+      4:1, Amazon 20:1, Nvidia 10:1, Tesla 3:1 &mdash; from data I already had, with no
+      external data source. Keeping history instead of overwriting it paid for itself
+      twice.
+    </p>
+
+    <p class="p-stack">
+      <span class="chip">Python</span>
+      <span class="chip">FastAPI</span>
+      <span class="chip">SQLite</span>
+      <span class="chip">Jinja2</span>
+      <span class="chip">HTMX</span>
+      <span class="chip">SQL</span>
+      <span class="chip">pytest</span>
+      <span class="chip">ETL</span>
+    </p>
+    <p><a href="https://github.com/RD-1205">Code on GitHub</a></p>
+  </div>
+</details>
 
 <details class="proj">
   <summary>
@@ -854,6 +1065,8 @@
   <div class="sk-row"><span class="sk-name">REST API design</span><span class="meter"><i class="l3"></i></span></div>
   <div class="sk-row"><span class="sk-name">PostgreSQL</span><span class="meter"><i class="l3"></i></span></div>
   <div class="sk-row"><span class="sk-name">FastAPI</span><span class="meter"><i class="l3"></i></span></div>
+  <div class="sk-row"><span class="sk-name">SQLite</span><span class="meter"><i class="l3"></i></span></div>
+  <div class="sk-row"><span class="sk-name">Server-rendered templating (Jinja2, HTMX)</span><span class="meter"><i class="l2"></i></span></div>
   <div class="sk-row"><span class="sk-name">Git</span><span class="meter"><i class="l3"></i></span></div>
   <div class="sk-row"><span class="sk-name">Docker</span><span class="meter"><i class="l2"></i></span></div>
   <div class="sk-row"><span class="sk-name">GitHub Actions</span><span class="meter"><i class="l2"></i></span></div>
@@ -865,6 +1078,7 @@
   <h3>Testing and data quality</h3>
   <div class="sk-row"><span class="sk-name">pytest</span><span class="meter"><i class="l3"></i></span></div>
   <div class="sk-row"><span class="sk-name">Dataset validation</span><span class="meter"><i class="l3"></i></span></div>
+  <div class="sk-row"><span class="sk-name">Schema design</span><span class="meter"><i class="l3"></i></span></div>
   <div class="sk-row"><span class="sk-name">Data leakage detection</span><span class="meter"><i class="l3"></i></span></div>
   <div class="sk-row"><span class="sk-name">Train/validation design</span><span class="meter"><i class="l3"></i></span></div>
 </div>
@@ -878,7 +1092,7 @@
   <div class="sk-row"><span class="sk-name">Model evaluation</span><span class="meter"><i class="l3"></i></span></div>
   <div class="sk-row"><span class="sk-name">PyTorch</span><span class="meter"><i class="l2"></i></span></div>
   <div class="sk-row"><span class="sk-name">TF-IDF, regression</span><span class="meter"><i class="l2"></i></span></div>
-  <div class="sk-row"><span class="sk-name">ETL and data pipelines</span><span class="meter"><i class="l2"></i></span></div>
+  <div class="sk-row"><span class="sk-name">ETL and data pipelines</span><span class="meter"><i class="l3"></i></span></div>
   <div class="sk-row"><span class="sk-name">Plotly, Streamlit</span><span class="meter"><i class="l2"></i></span></div>
 </div>
 
