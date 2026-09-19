@@ -117,58 +117,63 @@
     font-weight: 400;
   }
 
-  .proj {
+  .card {
+    padding: 2rem 0 2.1rem;
     border-bottom: 1px solid #1c1f24;
   }
 
-  .proj:first-of-type { border-top: 1px solid #1c1f24; }
-
-  .proj > summary {
-    display: block;
-    position: relative;
-    cursor: pointer;
-    padding: 1.15rem 2.2rem 1.15rem 0;
-    list-style: none;
-  }
-
-  .proj > summary::-webkit-details-marker { display: none; }
-  .proj > summary::marker { content: ""; }
-
-  .proj > summary:hover .p-name { color: #4ade80; }
-
-  .proj > summary:focus-visible {
-    outline: 2px solid #4ade80;
-    outline-offset: 3px;
-    border-radius: 2px;
-  }
+  .card:first-of-type { border-top: 1px solid #1c1f24; }
 
   .p-name {
     display: block;
-    font-size: 1.15rem;
+    font-size: 1.25rem;
     font-weight: 700;
     color: #f4f6f8;
-    line-height: 1.35;
-    margin-bottom: .3rem;
-    padding-left: .7rem;
-    border-left: 2px solid #2d7d4d;
+    line-height: 1.3;
+    margin: 0 0 .3rem;
   }
-
-  .proj > summary:hover .p-name { border-left-color: #4ade80; }
 
   .p-one {
     display: block;
     font-size: .97rem;
     color: #aeb5bd;
-    margin-bottom: .65rem;
-    padding-left: .7rem;
+    margin: 0;
   }
+
+  .hl {
+    list-style: none;
+    margin: 1.25rem 0 1.2rem;
+    padding: 0;
+  }
+
+  .hl li {
+    position: relative;
+    padding-left: 1.3rem;
+    margin-bottom: .75rem;
+  }
+
+  .hl li:last-child { margin-bottom: 0; }
+
+  .hl li::before {
+    content: "\25B8";
+    position: absolute;
+    left: 0;
+    color: #4ade80;
+  }
+
+  .hl strong { color: #f4f6f8; }
 
   .p-meta {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: .4rem;
-    padding-left: .7rem;
+    margin: 0 0 1.1rem;
+  }
+
+  .p-links {
+    margin: 1.1rem 0 0;
+    font-size: .92rem;
   }
 
   .chip {
@@ -183,35 +188,6 @@
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
     line-height: 1.5;
     white-space: nowrap;
-  }
-
-  .p-key {
-    border-color: #2d7d4d;
-    background: rgba(74, 222, 128, .08);
-    color: #4ade80;
-    font-weight: 600;
-    white-space: normal;
-  }
-
-  .proj > summary::after {
-    content: "+";
-    position: absolute;
-    right: .1rem;
-    top: 1.15rem;
-    width: 1.3rem;
-    height: 1.3rem;
-    line-height: 1.2rem;
-    text-align: center;
-    font-size: 1.05rem;
-    color: #838b95;
-    border: 1px solid #2b2f36;
-    border-radius: 3px;
-  }
-
-  .proj[open] > summary::after {
-    content: "\2212";
-    color: #4ade80;
-    border-color: #2d7d4d;
   }
 
   .p-body {
@@ -229,11 +205,20 @@
     margin: 1rem 0 1.2rem;
   }
 
-  .p-stack {
-    display: flex;
-    flex-wrap: wrap;
-    gap: .4rem;
-    margin: 0 0 1.2rem;
+  .demo {
+    margin: 1.3rem 0 0;
+  }
+
+  /* Poster is 1280x794; reserving the ratio stops the page jumping when it loads. */
+  .demo video {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1280 / 794;
+    display: block;
+    border-radius: 6px;
+    border: 1px solid #23262b;
+    background: #0c0e11;
+    object-fit: cover;
   }
 
     figure { margin: 1.4rem 0 1.2rem; }
@@ -523,11 +508,10 @@
     h1, h2, h3, .p-name, .c-lbl, .c-val, strong { color: #000; }
     h2::before { color: #000; }
     a { color: #000; text-decoration: underline; }
-    .p-name { border-left-color: #000; }
+    .hl li::before { color: #000; }
     .chip { background: none; border-color: #999; color: #111; }
-    .chip.p-key { border-color: #000; color: #000; background: none; }
     .p-body { display: block !important; }
-    .proj > summary::after { display: none; }
+    .demo { display: none; }
     .site-nav { display: none; }
     .dot-v2, .dot-v3 { fill: #444; } .dot-v1 { fill: #999; } .dot-ref { fill: #ccc; }
     .trend-line { stroke: #444; }
@@ -579,21 +563,43 @@
 
 <h2 id="projects">Projects</h2>
 
-<details class="proj">
-  <summary>
-    <span class="p-name">Financial Filings Data Platform</span>
-    <span class="p-one">Ingests public company filings, normalises them, and lets you query the result as of any past date</span>
-    <span class="p-meta">
-      <span class="chip">Python</span>
-      <span class="chip">FastAPI</span>
-      <span class="chip">SQLite</span>
-      <span class="chip">HTMX</span>
-      <span class="chip">pytest</span>
-      <span class="chip p-key">285k filings parsed &middot; two wrong numbers found</span>
-    </span>
-  </summary>
+<article class="card">
+  <h3 class="p-name">Financial Filings Data Platform</h3>
+  <p class="p-one">A stock screener built on public filings that can answer what a filter would have returned on any past date. 805 companies, 3.6 million facts.</p>
 
-  <div class="p-body">
+  <figure class="demo">
+    <video src="media/filings-platform.mp4"
+           poster="media/filings-platform-poster.jpg"
+           controls playsinline preload="none"
+           aria-label="Screen recording of the filings screener">
+      Your browser does not support embedded video.
+    </video>
+    <figcaption>
+      Press play: filter builder, results table, and an as-of date query returning only
+      the figures on file that day.
+    </figcaption>
+  </figure>
+
+  <ul class="hl">
+    <li><strong>Point-in-time queries.</strong> Every datapoint keeps its filing date, so a 2019 query returns only what was on file that day, not figures revised years later.</li>
+    <li><strong>Caught a silent 7% error.</strong> No fourth quarter is ever filed, so summing the last four rows left every trailing-twelve-month figure about 7% low. Nothing crashed; the numbers just looked reasonable.</li>
+    <li><strong>Detects stock splits from its own stored history</strong>, with no external data source. 108 events across 104 companies, including Apple, Amazon, Nvidia and Tesla.</li>
+  </ul>
+
+  <p class="p-meta">
+    <span class="chip">Python</span>
+    <span class="chip">FastAPI</span>
+    <span class="chip">SQLite</span>
+    <span class="chip">Jinja2</span>
+    <span class="chip">HTMX</span>
+    <span class="chip">SQL</span>
+    <span class="chip">pytest</span>
+    <span class="chip">ETL</span>
+  </p>
+
+  <details class="run-log">
+    <summary>Full write-up</summary>
+    <div class="run-log-body">
     <p>
       A stock screener built on public regulatory filings. It pulls raw filing data,
       normalises it into something queryable, computes the usual financial ratios, and
@@ -715,23 +721,24 @@
               <td class="acc">Series splices two bases</td>
             </tr>
             <tr class="final">
-              <td>First six handled and covered by tests</td>
-              <td class="acc">85 passing</td>
+              <td>All seven handled and covered by tests</td>
+              <td class="acc">122 passing</td>
             </tr>
           </tbody>
         </table></div>
 
-        <p class="rt-label">Field resolution on real filings, 65 companies</p>
+        <p class="rt-label">Field resolution on real filings, 805 companies</p>
         <div class="run-table-wrap"><table class="run-table">
           <thead><tr><th>Field</th><th>Resolved</th></tr></thead>
           <tbody>
-            <tr class="final"><td>Revenue, net income, total assets, equity</td><td class="acc">98%</td></tr>
-            <tr><td>Earnings per share, share count</td><td class="acc">97%</td></tr>
-            <tr><td>Operating cash flow</td><td class="acc">94%</td></tr>
-            <tr><td>Operating income, capital expenditure</td><td class="acc">85%</td></tr>
-            <tr><td>Cost of revenue, total liabilities</td><td class="acc">77%</td></tr>
-            <tr><td>Inventory &mdash; service companies hold none</td><td class="acc">68%</td></tr>
-            <tr><td>Gross profit &mdash; back-computed where absent</td><td class="acc">58%</td></tr>
+            <tr class="final"><td>Net income, total assets, equity</td><td class="acc">96%</td></tr>
+            <tr><td>Earnings per share, share count</td><td class="acc">93&ndash;96%</td></tr>
+            <tr><td>Operating cash flow</td><td class="acc">95%</td></tr>
+            <tr><td>Revenue, capital expenditure</td><td class="acc">89&ndash;90%</td></tr>
+            <tr><td>Operating income, total liabilities</td><td class="acc">75&ndash;76%</td></tr>
+            <tr><td>Cost of revenue</td><td class="acc">68%</td></tr>
+            <tr><td>Inventory &mdash; service companies hold none</td><td class="acc">61%</td></tr>
+            <tr><td>Gross profit &mdash; back-computed where absent</td><td class="acc">54%</td></tr>
           </tbody>
         </table></div>
       </div>
@@ -740,8 +747,9 @@
     <p>
       I built it first against a synthetic corpus &mdash; six fake companies, each designed
       to break one specific thing &mdash; then ran it on real filings.
-      <strong>285,000 facts across 65 companies.</strong> The field-name mapping resolved
-      revenue, net income, total assets and equity for <strong>98%</strong> of them.
+      <strong>3.6 million facts across 805 companies</strong>, drawn from about 49,000
+      filings. The field-name mapping resolved net income, total assets and equity for
+      <strong>96%</strong> of them, and revenue for <strong>89%</strong>.
       Apple's 2021 revenue came out at $365.82B against $365.82B in the actual filing.
     </p>
 
@@ -760,41 +768,91 @@
       The fix fell out of a decision I'd made much earlier for a different reason. Because
       I keep <em>every</em> published version of every figure rather than overwriting, the
       same year restated across two reports differs by exactly the split ratio. That let me
-      recover <strong>27 split events across 11 companies</strong> &mdash; Apple 7:1 and
-      4:1, Amazon 20:1, Nvidia 10:1, Tesla 3:1 &mdash; from data I already had, with no
-      external data source. Keeping history instead of overwriting it paid for itself
-      twice.
+      detect <strong>108 split events across 104 companies</strong> from data I already
+      had, with no external data source. The well-known ones match public split history
+      &mdash; Apple 7:1 and 4:1, Amazon 20:1, Nvidia 4:1 and 10:1, Tesla 5:1 and 3:1.
+      Keeping history instead of overwriting it paid for itself twice.
     </p>
+    </div>
+  </details>
 
-    <p class="p-stack">
-      <span class="chip">Python</span>
-      <span class="chip">FastAPI</span>
-      <span class="chip">SQLite</span>
-      <span class="chip">Jinja2</span>
-      <span class="chip">HTMX</span>
-      <span class="chip">SQL</span>
-      <span class="chip">pytest</span>
-      <span class="chip">ETL</span>
-    </p>
-    <p><a href="https://github.com/RD-1205">Code on GitHub</a></p>
-  </div>
-</details>
+  <p class="p-links"><a href="https://github.com/RD-1205">Code on GitHub</a></p>
+</article>
 
-<details class="proj">
-  <summary>
-    <span class="p-name">Job Market Salary Predictor</span>
-    <span class="p-one">Salary prediction from job postings, built end to end</span>
-    <span class="p-meta">
-      <span class="chip">Python</span>
-      <span class="chip">PyTorch</span>
-      <span class="chip">scikit-learn</span>
-      <span class="chip">FastAPI</span>
-      <span class="chip">PostgreSQL</span>
-      <span class="chip p-key">79.8% accuracy vs a 47.8% baseline</span>
-    </span>
-  </summary>
+<article class="card">
+  <h3 class="p-name">Job Market Salary Predictor</h3>
+  <p class="p-one">Predicts salary bands from job postings, built end to end: model, API, database and interface.</p>
 
-  <div class="p-body">
+  <figure>
+    <svg viewBox="0 0 660 270" role="img"
+         aria-label="Accuracy by model version on a 3-class task, plotted as connected points: baseline 47.8 percent, first version 54.6 percent, two-stage model 79.8 percent, validated on unseen employers 71.4 percent. A side branch shows an 85 percent result that was identified and rejected as a data leak, the model reading salaries out of the posting text.">
+      <line class="c-grid" x1="55" y1="210" x2="635" y2="210"/>
+      <line class="c-grid" x1="55" y1="165" x2="635" y2="165"/>
+      <line class="c-grid" x1="55" y1="120" x2="635" y2="120"/>
+      <line class="c-grid" x1="55" y1="75" x2="635" y2="75"/>
+      <line class="c-grid" x1="55" y1="30" x2="635" y2="30"/>
+
+      <text class="c-ax" x="55" y="18">All runs: 3-class task</text>
+
+      <text class="c-ax" x="45" y="214" text-anchor="end">0</text>
+      <text class="c-ax" x="45" y="169" text-anchor="end">25</text>
+      <text class="c-ax" x="45" y="124" text-anchor="end">50</text>
+      <text class="c-ax" x="45" y="79" text-anchor="end">75</text>
+      <text class="c-ax" x="45" y="34" text-anchor="end">100%</text>
+
+      <polyline class="trend-line"
+        points="113,124 229,112 461,66 577,81"/>
+
+      <line class="stem-leak" x1="229" y1="112" x2="345" y2="57"/>
+
+      <circle class="dot-ref" cx="113" cy="124" r="6"/>
+      <text class="c-val" x="113" y="106" text-anchor="middle">47.8%</text>
+      <text class="c-lbl" x="113" y="232" text-anchor="middle">Baseline</text>
+
+      <circle class="dot-v1" cx="229" cy="112" r="6"/>
+      <text class="c-val" x="229" y="94" text-anchor="middle">54.6%</text>
+      <text class="c-lbl" x="229" y="232" text-anchor="middle">First version</text>
+
+      <circle class="dot-leak" cx="345" cy="57" r="6"/>
+      <text class="c-val-leak" x="345" y="39" text-anchor="middle">~85%</text>
+      <text class="c-lbl" x="345" y="232" text-anchor="middle">Leak, rejected</text>
+      <text class="c-lbl-leak" x="345" y="246" text-anchor="middle">(read salary from text)</text>
+
+      <circle class="dot-v2" cx="461" cy="66" r="6"/>
+      <text class="c-val" x="461" y="48" text-anchor="middle">79.8%</text>
+      <text class="c-lbl" x="461" y="232" text-anchor="middle">Two-stage model</text>
+
+      <circle class="dot-v3" cx="577" cy="81" r="6"/>
+      <text class="c-val" x="577" y="63" text-anchor="middle">71.4%</text>
+      <text class="c-lbl" x="577" y="232" text-anchor="middle">Unseen employers</text>
+    </svg>
+    <figcaption>
+      Accuracy on held-out data, one point per model version. The dashed branch is a result
+      I rejected as a data leak.
+    </figcaption>
+  </figure>
+
+  <ul class="hl">
+    <li><strong>54.6% to 79.8%</strong> against a 47.8% majority-class baseline, by rebuilding it as a two-stage model: TF-IDF feeding gradient boosting.</li>
+    <li><strong>Rejected an easy 85%.</strong> The model was reading the salary straight out of the posting text. That's a leak, not signal.</li>
+    <li><strong>71.4% on employers it never saw</strong> during training. That's the number that holds up. 57 tests, most of them checking the data rather than the code.</li>
+  </ul>
+
+  <p class="p-meta">
+    <span class="chip">Python</span>
+    <span class="chip">PyTorch</span>
+    <span class="chip">scikit-learn</span>
+    <span class="chip">TF-IDF</span>
+    <span class="chip">gradient boosting</span>
+    <span class="chip">FastAPI</span>
+    <span class="chip">PostgreSQL</span>
+    <span class="chip">Streamlit</span>
+    <span class="chip">pytest</span>
+  </p>
+
+  <details class="run-log">
+    <summary>Full write-up</summary>
+    <div class="run-log-body">
     <p>
       Predicts salaries from job postings. I built the whole thing: a FastAPI backend,
       PostgreSQL for storage, and a Streamlit interface so people who don't write code
@@ -813,59 +871,6 @@
       employers the model had never seen, which came in at <strong>71.4%</strong>. I
       documented the whole process for both technical and non-technical readers.
     </p>
-
-    <figure>
-      <svg viewBox="0 0 660 270" role="img"
-           aria-label="Accuracy by model version on a 3-class task, plotted as connected points: baseline 47.8 percent, first version 54.6 percent, two-stage model 79.8 percent, validated on unseen employers 71.4 percent. A side branch shows an 85 percent result that was identified and rejected as a data leak, the model reading salaries out of the posting text.">
-        <line class="c-grid" x1="55" y1="210" x2="635" y2="210"/>
-        <line class="c-grid" x1="55" y1="165" x2="635" y2="165"/>
-        <line class="c-grid" x1="55" y1="120" x2="635" y2="120"/>
-        <line class="c-grid" x1="55" y1="75" x2="635" y2="75"/>
-        <line class="c-grid" x1="55" y1="30" x2="635" y2="30"/>
-
-        <text class="c-ax" x="55" y="18">All runs: 3-class task</text>
-
-        <text class="c-ax" x="45" y="214" text-anchor="end">0</text>
-        <text class="c-ax" x="45" y="169" text-anchor="end">25</text>
-        <text class="c-ax" x="45" y="124" text-anchor="end">50</text>
-        <text class="c-ax" x="45" y="79" text-anchor="end">75</text>
-        <text class="c-ax" x="45" y="34" text-anchor="end">100%</text>
-
-        <polyline class="trend-line"
-          points="113,124 229,112 461,66 577,81"/>
-
-        <line class="stem-leak" x1="229" y1="112" x2="345" y2="57"/>
-
-        <circle class="dot-ref" cx="113" cy="124" r="6"/>
-        <text class="c-val" x="113" y="106" text-anchor="middle">47.8%</text>
-        <text class="c-lbl" x="113" y="232" text-anchor="middle">Baseline</text>
-
-        <circle class="dot-v1" cx="229" cy="112" r="6"/>
-        <text class="c-val" x="229" y="94" text-anchor="middle">54.6%</text>
-        <text class="c-lbl" x="229" y="232" text-anchor="middle">First version</text>
-
-        <circle class="dot-leak" cx="345" cy="57" r="6"/>
-        <text class="c-val-leak" x="345" y="39" text-anchor="middle">~85%</text>
-        <text class="c-lbl" x="345" y="232" text-anchor="middle">Leak, rejected</text>
-        <text class="c-lbl-leak" x="345" y="246" text-anchor="middle">(read salary from text)</text>
-
-        <circle class="dot-v2" cx="461" cy="66" r="6"/>
-        <text class="c-val" x="461" y="48" text-anchor="middle">79.8%</text>
-        <text class="c-lbl" x="461" y="232" text-anchor="middle">Two-stage model</text>
-
-        <circle class="dot-v3" cx="577" cy="81" r="6"/>
-        <text class="c-val" x="577" y="63" text-anchor="middle">71.4%</text>
-        <text class="c-lbl" x="577" y="232" text-anchor="middle">Unseen employers</text>
-      </svg>
-      <figcaption>
-        Accuracy on held-out data, one point per model version, connected in the order I
-        reached them. Two-stage model, at 79.8%, is the number I report. Off to the side is
-        an ~85% run I identified and rejected: it came from the model reading salaries
-        directly out of the posting text rather than learning from real signal. Validating
-        the reported model on employers it hadn't seen during training brought accuracy to
-        71.4%, still well above baseline.
-      </figcaption>
-    </figure>
 
     <details class="run-log">
       <summary>Full run log</summary>
@@ -957,93 +962,81 @@
     <p>
       There are 57 tests, and most of them check the data rather than the code.
     </p>
-    <p class="p-stack">
-      <span class="chip">Python</span>
-      <span class="chip">PyTorch</span>
-      <span class="chip">scikit-learn</span>
-      <span class="chip">TF-IDF</span>
-      <span class="chip">gradient boosting</span>
-      <span class="chip">FastAPI</span>
-      <span class="chip">PostgreSQL</span>
-      <span class="chip">Streamlit</span>
-      <span class="chip">pytest</span>
-    </p>
-    <p>
-      <a href="https://github.com/RD-1205">Code on GitHub</a>
-    </p>
-  </div>
-</details>
+    </div>
+  </details>
 
-<details class="proj">
-  <summary>
-    <span class="p-name">Consultation Booking Platform</span>
-    <span class="p-one">Appointment booking with an enforced state machine and an LLM inside the flow</span>
-    <span class="p-meta">
-      <span class="chip">React</span>
-      <span class="chip">Spring Boot</span>
-      <span class="chip">PostgreSQL</span>
-      <span class="chip">Docker</span>
-      <span class="chip">Gemini API</span>
-      <span class="chip p-key">4-state lifecycle, invalid transitions rejected</span>
-    </span>
-  </summary>
+  <p class="p-links"><a href="https://github.com/RD-1205">Code on GitHub</a></p>
+</article>
 
-  <div class="p-body">
+<article class="card">
+  <h3 class="p-name">Consultation Booking Platform</h3>
+  <p class="p-one">Group project: a consulting marketplace with three roles (client, consultant, admin), JWT auth and an approval step for new consultants.</p>
+
+  <figure class="demo">
+    <video src="media/consulting-platform.mp4"
+           poster="media/consulting-platform-poster.jpg"
+           controls playsinline preload="none"
+           aria-label="Screen recording of the consultation booking platform">
+      Your browser does not support embedded video.
+    </video>
+    <figcaption>
+      Press play: role selection, sign-in, booking a consultation, and the Gemini assistant
+      working inside the flow.
+    </figcaption>
+  </figure>
+
+  <ul class="hl">
+    <li><strong>Invalid transitions are rejected.</strong> A booking moves requested, confirmed, paid, completed through state objects, with rejected and cancelled as exits. Anything out of order is refused on the server, not trusted from the client.</li>
+    <li><strong>Payment method chosen at runtime.</strong> Credit card, debit card, PayPal and bank transfer sit behind one interface, and cancellations follow refund rules.</li>
+    <li><strong>The Gemini assistant lives inside the booking flow</strong>, not in a chat window beside it, so the AI works within a process that already has defined rules.</li>
+  </ul>
+
+  <p class="p-meta">
+    <span class="chip">React</span>
+    <span class="chip">Spring Boot</span>
+    <span class="chip">PostgreSQL</span>
+    <span class="chip">Docker</span>
+    <span class="chip">Gemini API</span>
+    <span class="chip">REST</span>
+  </p>
+
+  <details class="run-log">
+    <summary>Full write-up</summary>
+    <div class="run-log-body">
     <p>
-      A booking platform for consultations. The appointment lifecycle is modelled as real
-      states, requested to confirmed to completed to cancelled, with validation that
-      rejects transitions that shouldn't be possible rather than trusting whatever the
-      client sends.
+      A booking platform for consultations, built as a group project. The appointment lifecycle is modelled as real
+      states, with validation that rejects transitions that shouldn't be possible rather
+      than trusting whatever the client sends.
     </p>
     <p>
       It has a Gemini chatbot built into the booking flow itself, not sitting off to the
-      side as a separate assistant. I wanted the AI to work inside a process that already
+      side as a separate assistant. We wanted the AI to work inside a process that already
       had defined rules.
     </p>
-    <p class="p-stack">
-      <span class="chip">React</span>
-      <span class="chip">Spring Boot</span>
-      <span class="chip">PostgreSQL</span>
-      <span class="chip">Docker</span>
-      <span class="chip">Gemini API</span>
-      <span class="chip">REST</span>
-    </p>
-    <p><a href="https://github.com/RD-1205">Code on GitHub</a></p>
-  </div>
-</details>
+    </div>
+  </details>
 
-<details class="proj">
-  <summary>
-    <span class="p-name">Full-Stack Chess Engine</span>
-    <span class="p-one">Server-side chess AI with complete rule validation</span>
-    <span class="p-meta">
-      <span class="chip">Java</span>
-      <span class="chip">Spring Boot</span>
-      <span class="chip">REST</span>
-      <span class="chip">JavaScript</span>
-      <span class="chip p-key">minimax with alpha-beta pruning</span>
-    </span>
-  </summary>
+  <p class="p-links"><a href="https://github.com/RD-1205">Code on GitHub</a></p>
+</article>
 
-  <div class="p-body">
-    <p>
-      A chess engine with the AI and all the rule checking on the server. It searches with
-      minimax and alpha-beta pruning.
-    </p>
-    <p>
-      Rule validation covers castling, en passant, promotion, and check, checkmate and
-      stalemate detection. Those are the cases where a lot of hobby engines quietly break,
-      so getting them right was most of the work.
-    </p>
-    <p class="p-stack">
-      <span class="chip">Java</span>
-      <span class="chip">Spring Boot</span>
-      <span class="chip">REST</span>
-      <span class="chip">JavaScript</span>
-    </p>
-    <p><a href="https://github.com/RD-1205">Code on GitHub</a></p>
-  </div>
-</details>
+<article class="card">
+  <h3 class="p-name">Full-Stack Chess Engine</h3>
+  <p class="p-one">A chess engine with the AI and all the rule checking on the server.</p>
+
+  <ul class="hl">
+    <li><strong>The edge cases are the project.</strong> Castling, en passant, promotion, and check, checkmate and stalemate detection. Those are where a lot of hobby engines quietly break, so getting them right was most of the work.</li>
+    <li><strong>Minimax with alpha-beta pruning</strong> for the search, running server-side behind a REST API.</li>
+  </ul>
+
+  <p class="p-meta">
+    <span class="chip">Java</span>
+    <span class="chip">Spring Boot</span>
+    <span class="chip">REST</span>
+    <span class="chip">JavaScript</span>
+  </p>
+
+  <p class="p-links"><a href="https://github.com/RD-1205">Code on GitHub</a></p>
+</article>
 
 <h2 id="skills">Skills</h2>
 
@@ -1167,6 +1160,17 @@
 <footer>
   Last updated August 2026.
 </footer>
+
+<script>
+  // Videos never autoplay. When one starts, pause any other so audio doesn't overlap.
+  // "play" doesn't bubble, so listen in the capture phase.
+  document.addEventListener("play", function (e) {
+    if (!(e.target instanceof HTMLVideoElement)) return;
+    document.querySelectorAll(".demo video").forEach(function (v) {
+      if (v !== e.target) v.pause();
+    });
+  }, true);
+</script>
 
 </body>
 </html>
