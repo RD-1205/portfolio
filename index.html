@@ -91,6 +91,14 @@
   p { margin: 0 0 1.1rem; }
   p:last-child { margin-bottom: 0; }
 
+  /* Measure: unclassed <p> is the actual prose (About, write-ups) --
+     38em keeps lines in the ~65-75 character range that's comfortable to
+     read, instead of stretching to the full 50rem body width (~95
+     characters at this type size). Classed paragraphs (.lede, .p-meta,
+     .p-links, .meta) are short single lines or layout rows, not prose, so
+     they're left alone. */
+  p:not([class]), .hl li { max-width: 38em; }
+
   strong { color: #edf0f2; font-weight: 600; }
 
   a {
@@ -261,7 +269,7 @@
     font-size: .7rem;
     letter-spacing: .04em;
     text-transform: uppercase;
-    color: #6f7781;
+    color: #838b95;
   }
 
   .run-log[open] > summary::after { content: "Hide"; }
@@ -281,7 +289,25 @@
 
   .rt-label:first-child { margin-top: .9rem; }
 
-  .run-table-wrap { overflow-x: auto; }
+  /* On a narrow viewport these tables scroll horizontally, but with no
+     scrollbar visible (mobile browsers auto-hide it) there was nothing
+     telling anyone that -- text just looked cut off mid-word. A right-edge
+     fade only appears once app.js has confirmed there's actually more to
+     scroll to (.is-scrollable), so a table that already fits gets no fade
+     at all. */
+  .run-table-wrap { overflow-x: auto; position: relative; }
+
+  .run-table-wrap.is-scrollable {
+    -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent);
+            mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent);
+  }
+
+  .scroll-hint {
+    font-size: .74rem;
+    color: #838b95;
+    text-align: right;
+    margin: -.6rem 0 .5rem;
+  }
 
   .run-table {
     width: 100%;
@@ -329,7 +355,7 @@
   .c-grid { stroke: #23262b; stroke-width: 1; }
   .c-lbl  { fill: #ccd1d7; font-size: 12.5px; }
   .c-lbl-leak { fill: #f59e0b; font-size: 10.5px; }
-  .c-ax   { fill: #6f7781; font-size: 11px; }
+  .c-ax   { fill: #838b95; font-size: 11px; }
   .c-val  { fill: #f4f6f8; font-size: 12.5px; font-weight: 600; }
   .c-val-leak { fill: #f59e0b; font-size: 12.5px; font-weight: 600; }
 
@@ -341,7 +367,11 @@
   .bar-bad  { fill: #f59e0b; }
   .bar-gap  { fill: #2a2d33; }
   .bar-lbl  { fill: #ccd1d7; font-size: 12.5px; }
-  .bar-note { fill: #6f7781; font-size: 11px; }
+  /* #6f7781 measured at 4.32:1 on this background -- below the 4.5:1 AA
+     floor for text this size, and this specific text is the sentence that
+     explains what the diagram is showing, so it needs to actually be
+     legible. #838b95 (already used for .meta/.p-one) reaches 5.68:1. */
+  .bar-note { fill: #838b95; font-size: 11px; }
   .q-real   { fill: #4ade80; }
   .q-missing{ fill: none; stroke: #f59e0b; stroke-width: 1.5; stroke-dasharray: 4 3; }
   .stem-leak { stroke: #f59e0b; stroke-width: 2; stroke-dasharray: 4 3; }
@@ -489,7 +519,7 @@
     padding-top: 1.5rem;
     border-top: 1px solid #23262b;
     font-size: .84rem;
-    color: #6f7781;
+    color: #838b95;
   }
 
     @media (max-width: 34rem) {
@@ -1170,6 +1200,33 @@
       if (v !== e.target) v.pause();
     });
   }, true);
+
+  // The run-tables scroll horizontally on narrow screens with no visible
+  // scrollbar, so text just looked cut off with no hint there was more.
+  // Mark only the wraps that actually overflow, and only while they still
+  // do -- a <details> that starts closed reports 0 width until opened, and
+  // rotating the phone changes what fits.
+  function markScrollableTables() {
+    document.querySelectorAll(".run-table-wrap").forEach(function (el) {
+      var scrollable = el.scrollWidth > el.clientWidth + 1;
+      el.classList.toggle("is-scrollable", scrollable);
+      var hint = el.previousElementSibling;
+      var hasHint = hint && hint.classList && hint.classList.contains("scroll-hint");
+      if (scrollable && !hasHint) {
+        hint = document.createElement("p");
+        hint.className = "scroll-hint";
+        hint.textContent = "Scroll to see more →";
+        el.parentNode.insertBefore(hint, el);
+      } else if (!scrollable && hasHint) {
+        hint.remove();
+      }
+    });
+  }
+  window.addEventListener("resize", markScrollableTables);
+  document.addEventListener("toggle", function (e) {
+    if (e.target instanceof HTMLDetailsElement) markScrollableTables();
+  }, true);
+  markScrollableTables();
 </script>
 
 </body>
